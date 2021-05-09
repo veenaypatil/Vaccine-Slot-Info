@@ -36,13 +36,14 @@ python check_available_slots.py district-wise --district_id 334 -date 10-05-2021
 4. Check available appointment slots pincode wise
 python check_available_slots.py district-wise -pin 411015 --date 10-05-2021
 
-5. Run the script continously to check for available appointments. This checks after every 5 mins
-python check_available_slots.py continuously --district_id 363 --date 10-05-2021
+5. Run the script continously to check for available appointments after evey x(seconds) interval
+python check_available_slots.py continuously --district_id 363 --date 10-05-2021 --age_filter 18 --interval 2
 ```
 
 Notification will be send on the whatsapp
 
-<img width="634" alt="Screenshot 2021-05-09 at 4 29 01 PM" src="https://user-images.githubusercontent.com/52563354/117569574-f4705780-b0e3-11eb-9967-c09f97e647c5.png">
+<img width="350" alt="Screenshot 2021-05-09 at 10 01 03 PM" src="https://user-images.githubusercontent.com/52563354/117579869-927b1680-b112-11eb-9403-21438d53bc46.png">
+
 
 ### TODO
 [] Add SMS, Email notification
