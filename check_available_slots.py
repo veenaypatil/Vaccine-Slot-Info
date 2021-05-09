@@ -4,6 +4,7 @@ import requests
 from cowin_api import *
 from whatsapp import send_whatsapp_message
 
+
 @click.group()
 def main():
     """
@@ -43,27 +44,29 @@ def pincode_wise(pin_code, date):
         print_error_message(e)
 
 
-def check_district_wise_slots(district_id, date):
-    print("Checking for available slots in district " + str(district_id) + ", for date " + str(date))
-    url = BASE_API + find_by_district
-    params = {
-        "district_id": district_id,
-        "date": date
-    }
-    headers = {
-        "accept": "application/json",
-        "Accept-Language": "hi_IN",
-        "user-agent": "*"
-    }
-    try:
-        response = requests.get(url=url, headers=headers, params=params)
-        response.raise_for_status()
-        response_data = response.json()
-        print(response_data)
-        if len(response_data['sessions']) > 0:
-            message = create_message_from_session(response_data['sessions'])
-    except requests.HTTPError as e:
-        print_error_message(e)
+def check_district_wise_slots(district_id, date, age_filter):
+    if age_filter == 18 or age_filter == 45:
+        print("Checking for available slots in district " + str(district_id) + ", for date " + str(date))
+        url = BASE_API + find_by_district
+        params = {
+            "district_id": district_id,
+            "date": date
+        }
+        headers = {
+            "accept": "application/json",
+            "Accept-Language": "hi_IN",
+            "user-agent": "*"
+        }
+        try:
+            response = requests.get(url=url, headers=headers, params=params)
+            response.raise_for_status()
+            response_data = response.json()
+            if len(response_data['sessions']) > 0:
+                message = create_message_from_session(response_data['sessions'], age_filter)
+        except requests.HTTPError as e:
+            print_error_message(e)
+    else:
+        raise ValueError("Possible values for age_filter is 18 or 45")
 
 
 @main.command()
@@ -75,18 +78,24 @@ def check_district_wise_slots(district_id, date):
               type=str,
               required=True,
               help="Date for which appointments are to be checked")
-def district_wise(district_id, date):
-    check_district_wise_slots(district_id, date)
+@click.option("-af", "--age_filter",
+              type=int,
+              required=True,
+              help="Filter only 18 plus or 45 plus appointments")
+def district_wise(district_id, date, age_filter):
+    check_district_wise_slots(district_id, date, age_filter)
 
 
-def create_message_from_session(sessions):
+def create_message_from_session(sessions, age_filter):
     message = "Following Centers are available \n\n"
     for session in sessions:
-        if session['available_capacity'] > 0:
+        if session['available_capacity'] > 0 and session['min_age_limit'] == age_filter:
+            print(str(session['pincode']))
             message = message + "Name : " + str(session['name']) + "\n"
             message = message + "Pincode: " + str(session['pincode']) + "\n"
             message = message + "Vaccine Type: " + str(session['vaccine']) + "\n"
-            message = message + "Slots: " + str(session['slots']) + "\n"
+            message = message + "Available Capacity: " + str(session['available_capacity']) + "\n"
+            message = message + "Min Age: " + str(session['min_age_limit']) + "\n"
             send_whatsapp_message(message)
             message = "\n\n"
     return message
@@ -173,10 +182,18 @@ def get_district_id(state_id, district_name):
               type=str,
               required=True,
               help="Date for which appointments are to be checked")
-def continuously(district_id, date):
+@click.option("-af", "--age_filter",
+              type=int,
+              required=True,
+              help="Filter only 18 plus or 45 plus appointments")
+@click.option("-i", "--interval",
+              type=int,
+              required=True,
+              help="Interval in seconds")
+def continuously(district_id, date, age_filter, interval):
     while True:
-        check_district_wise_slots(district_id, date)
-        time.sleep(60)
+        check_district_wise_slots(district_id, date, age_filter)
+        time.sleep(interval)
 
 
 if __name__ == '__main__':
