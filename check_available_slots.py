@@ -3,6 +3,10 @@ import click
 import requests
 from cowin_api import *
 from whatsapp import send_whatsapp_message
+from cacheout import Cache
+
+# cache ttl is of 1 minute, this is to avoid sending multiple notifications
+cache = Cache(ttl=60)
 
 
 @click.group()
@@ -22,7 +26,11 @@ def main():
               type=str,
               required=True,
               help="Date for which appointments are to be checked")
-def pincode_wise(pin_code, date):
+@click.option("-af", "--age_filter",
+              type=int,
+              default=18,
+              help="Filter only 18 plus or 45 plus appointments")
+def pincode_wise(pin_code, date, age_filter):
     url = BASE_API + find_by_pin
     params = {
         "pincode": pin_code,
@@ -38,7 +46,7 @@ def pincode_wise(pin_code, date):
         response.raise_for_status()
         response_data = response.json()
         if len(response_data['sessions']) > 0:
-            message = create_message_from_session(response_data['sessions'])
+            message = create_message_from_session(response_data['sessions'], age_filter)
             send_whatsapp_message(message)
     except requests.HTTPError as e:
         print_error_message(e)
@@ -80,7 +88,7 @@ def check_district_wise_slots(district_id, date, age_filter):
               help="Date for which appointments are to be checked")
 @click.option("-af", "--age_filter",
               type=int,
-              required=True,
+              default=18,
               help="Filter only 18 plus or 45 plus appointments")
 def district_wise(district_id, date, age_filter):
     check_district_wise_slots(district_id, date, age_filter)
@@ -90,14 +98,16 @@ def create_message_from_session(sessions, age_filter):
     message = "Following Centers are available \n\n"
     for session in sessions:
         if session['available_capacity'] > 0 and session['min_age_limit'] == age_filter:
-            print(str(session['pincode']))
-            message = message + "Name : " + str(session['name']) + "\n"
-            message = message + "Pincode: " + str(session['pincode']) + "\n"
-            message = message + "Vaccine Type: " + str(session['vaccine']) + "\n"
-            message = message + "Available Capacity: " + str(session['available_capacity']) + "\n"
-            message = message + "Min Age: " + str(session['min_age_limit']) + "\n"
-            send_whatsapp_message(message)
-            message = "\n\n"
+            print(str(session['pincode']) + "," + str(session['available_capacity']))
+            if cache.get(session['pincode']) is None:
+                cache.set(session['pincode'], 1)
+                message = message + "Name : " + str(session['name']) + "\n"
+                message = message + "Pincode: " + str(session['pincode']) + "\n"
+                message = message + "Vaccine Type: " + str(session['vaccine']) + "\n"
+                message = message + "Available Capacity: " + str(session['available_capacity']) + "\n"
+                message = message + "Min Age: " + str(session['min_age_limit']) + "\n"
+                send_whatsapp_message(message)
+                message = "\n\n"
     return message
 
 
@@ -184,7 +194,7 @@ def get_district_id(state_id, district_name):
               help="Date for which appointments are to be checked")
 @click.option("-af", "--age_filter",
               type=int,
-              required=True,
+              default=18,
               help="Filter only 18 plus or 45 plus appointments")
 @click.option("-i", "--interval",
               type=int,
