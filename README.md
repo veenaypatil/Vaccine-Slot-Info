@@ -1,5 +1,5 @@
 # Vaccine-Slot-Info
-CLI to check for Covid appointments pincode or district wise and get notified on WhatsApp.
+CLI to check for Covid Vaccine appointments pincode or district wise and get notified on WhatsApp.
 This is integrated with Twilio API to send notification to whatsapp.
 
 ### Pre-requisites
