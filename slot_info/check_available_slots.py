@@ -1,8 +1,8 @@
 import time
 import click
 import requests
-from cowin_api import *
-from whatsapp import send_whatsapp_message
+from slot_info.cowin_api import *
+from slot_info.whatsapp import send_whatsapp_message
 from cacheout import Cache
 
 # cache ttl is of 1 minute, this is to avoid sending multiple notifications
@@ -48,13 +48,16 @@ def pincode_wise(pin_code, date, age_filter):
         if len(response_data['sessions']) > 0:
             message = create_message_from_session(response_data['sessions'], age_filter)
             send_whatsapp_message(message)
+        else:
+            print("No slots are available for pincode: ", pin_code)
     except requests.HTTPError as e:
         print_error_message(e)
 
 
 def check_district_wise_slots(district_id, date, age_filter):
     if age_filter == 18 or age_filter == 45:
-        print("Checking for available slots in district " + str(district_id) + ", for date " + str(date))
+        print("Checking for available slots in district " + str(district_id) + ", for date " + str(
+            date) + ",for min_age: " + str(age_filter))
         url = BASE_API + find_by_district
         params = {
             "district_id": district_id,
@@ -71,6 +74,8 @@ def check_district_wise_slots(district_id, date, age_filter):
             response_data = response.json()
             if len(response_data['sessions']) > 0:
                 message = create_message_from_session(response_data['sessions'], age_filter)
+            else:
+                print("No slots are available for district: ", district_id)
         except requests.HTTPError as e:
             print_error_message(e)
     else:
