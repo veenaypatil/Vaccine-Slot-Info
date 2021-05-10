@@ -17,7 +17,7 @@ def main():
     pass
 
 
-@main.command()
+@main.command(name="pincode-wise")
 @click.option("-pin", "--pin_code",
               type=str,
               required=True,
@@ -82,7 +82,7 @@ def check_district_wise_slots(district_id, date, age_filter):
         raise ValueError("Possible values for age_filter is 18 or 45")
 
 
-@main.command()
+@main.command(name="district-wise")
 @click.option("-dId", "--district_id",
               type=str,
               required=True,
@@ -124,7 +124,7 @@ def print_error_message(http_error):
     print(error_message)
 
 
-@main.command()
+@main.command(name="get-state-id")
 @click.option("-sn", "--state_name",
               type=str,
               required=True,
@@ -154,7 +154,7 @@ def get_state_id(state_name):
         print_error_message(e)
 
 
-@main.command()
+@main.command(name="get-district-id")
 @click.option("-sId", "--state_id",
               type=str,
               required=True,

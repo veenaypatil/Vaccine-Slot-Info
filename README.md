@@ -46,7 +46,7 @@ slotinfo get-state-id --state_name Maharashtra
 slotinfo get-district-id --state_id 21 --district_name Nanded
 
 3. Check available appointment slots district wise
-slotinfo district-wise --district_id 334 -date 10-05-2021
+slotinfo district-wise --district_id 334 --date 10-05-2021
 
 4. Check available appointment slots pincode wise
 slotinfo pincode-wise -pin 411015 --date 10-05-2021
@@ -54,7 +54,22 @@ slotinfo pincode-wise -pin 411015 --date 10-05-2021
 5. Run the script continously to check for available appointments after evey x(seconds) interval
 slotinfo continuously --district_id 363 --date 10-05-2021 --age_filter 18 --interval 2
 ```
+To get the help of any command use `--help` option with command name
+```
+slotinfo continuously --help
+Usage: slotinfo continuously [OPTIONS]
 
+Options:
+  -dId, --district_id TEXT   Provide district Id to check for appointments
+                             [required]
+
+  -d, --date TEXT            Date for which appointments are to be checked
+                             [required]
+
+  -af, --age_filter INTEGER  Filter only 18 plus or 45 plus appointments
+  -i, --interval INTEGER     Interval in seconds  [required]
+  --help                     Show this message and exit.
+```
 Notification will be send on the whatsapp
 
 <img width="350" alt="Screenshot 2021-05-09 at 10 01 03 PM" src="https://user-images.githubusercontent.com/52563354/117579869-927b1680-b112-11eb-9403-21438d53bc46.png">
