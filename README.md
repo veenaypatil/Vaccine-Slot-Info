@@ -3,6 +3,10 @@ CLI to continuously check for appointments and get notified on WhatsApp
 
 This is integrated with Twilio API to send notification to whatsapp. Currently only a Trail account is used of Twilio.
 
+### Pre-requisites
+1. Python 3.6+
+2. Twilio Free Trail Account for whatsapp notification
+
 ### Twilio
 1. Create a new Twilio Trail Account - www.twilio.com/referral/PfBNJy 
 2. Export the following env variables
