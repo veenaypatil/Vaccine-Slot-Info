@@ -105,3 +105,6 @@ Options:
 <img width="350" alt="Screenshot 2021-05-09 at 10 01 03 PM" src="https://user-images.githubusercontent.com/52563354/117579869-927b1680-b112-11eb-9403-21438d53bc46.png">
 
 ### Telegram Notification Sample
+
+<img width="657" alt="Screenshot 2021-05-11 at 11 11 05 AM" src="https://user-images.githubusercontent.com/52563354/117764129-9bbacf00-b249-11eb-9609-df53a44ee34d.png">
+
