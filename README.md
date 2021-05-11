@@ -40,7 +40,7 @@ export TO_MOBILE_NUMBER="your_mobile_number"
 
 ### Installation steps to use `slotinfo` command
 
-1. Download release directly by clicking on slotinfo-1.0.tar.gz here - https://github.com/veenaypatil/Vaccine-Slot-Info/releases/tag/v1.0
+1. Download release directly by clicking on slotinfo-1.0.tar.gz here - https://github.com/veenaypatil/Vaccine-Slot-Info/releases/tag/v1.1
 ```
 sudo pip install <downloaded_folder>/slotinfo-1.0.tar.gz
 ```
