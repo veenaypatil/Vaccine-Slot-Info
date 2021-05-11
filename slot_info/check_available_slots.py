@@ -2,6 +2,7 @@ import time
 import click
 import requests
 from slot_info.cowin_api import *
+from slot_info.telegram import send_telegram_message
 from slot_info.whatsapp import send_whatsapp_message
 from cacheout import Cache
 
@@ -30,56 +31,12 @@ def main():
               type=int,
               default=18,
               help="Filter only 18 plus or 45 plus appointments")
-def pincode_wise(pin_code, date, age_filter):
-    url = BASE_API + find_by_pin
-    params = {
-        "pincode": pin_code,
-        "date": date
-    }
-    headers = {
-        "accept": "application/json",
-        "Accept-Language": "hi_IN",
-        "user-agent": "*"
-    }
-    try:
-        response = requests.get(url=url, headers=headers, params=params)
-        response.raise_for_status()
-        response_data = response.json()
-        if len(response_data['sessions']) > 0:
-            message = create_message_from_session(response_data['sessions'], age_filter)
-            send_whatsapp_message(message)
-        else:
-            print("No slots are available for pincode: ", pin_code)
-    except requests.HTTPError as e:
-        print_error_message(e)
-
-
-def check_district_wise_slots(district_id, date, age_filter):
-    if age_filter == 18 or age_filter == 45:
-        print("Checking for available slots in district " + str(district_id) + ", for date " + str(
-            date) + ",for min_age: " + str(age_filter))
-        url = BASE_API + find_by_district
-        params = {
-            "district_id": district_id,
-            "date": date
-        }
-        headers = {
-            "accept": "application/json",
-            "Accept-Language": "hi_IN",
-            "user-agent": "*"
-        }
-        try:
-            response = requests.get(url=url, headers=headers, params=params)
-            response.raise_for_status()
-            response_data = response.json()
-            if len(response_data['sessions']) > 0:
-                message = create_message_from_session(response_data['sessions'], age_filter)
-            else:
-                print("No slots are available for district: ", district_id)
-        except requests.HTTPError as e:
-            print_error_message(e)
-    else:
-        raise ValueError("Possible values for age_filter is 18 or 45")
+@click.option("-n", "--notify_on",
+              type=click.Choice(['whatsapp', 'telegram']),
+              required=True,
+              help="Receive notification on whatsapp/telegram")
+def pincode_wise(pin_code, date, age_filter, notify_on):
+    check_pincode_wise_slots(pin_code, date, age_filter, notify_on)
 
 
 @main.command(name="district-wise")
@@ -95,33 +52,12 @@ def check_district_wise_slots(district_id, date, age_filter):
               type=int,
               default=18,
               help="Filter only 18 plus or 45 plus appointments")
-def district_wise(district_id, date, age_filter):
-    check_district_wise_slots(district_id, date, age_filter)
-
-
-def create_message_from_session(sessions, age_filter):
-    message = "Following Centers are available \n\n"
-    for session in sessions:
-        if session['available_capacity'] > 0 and session['min_age_limit'] == age_filter:
-            print(str(session['pincode']) + "," + str(session['available_capacity']))
-            if cache.get(session['pincode']) is None:
-                cache.set(session['pincode'], 1)
-                message = message + "Name : " + str(session['name']) + "\n"
-                message = message + "Pincode: " + str(session['pincode']) + "\n"
-                message = message + "Vaccine Type: " + str(session['vaccine']) + "\n"
-                message = message + "Available Capacity: " + str(session['available_capacity']) + "\n"
-                message = message + "Min Age: " + str(session['min_age_limit']) + "\n"
-                send_whatsapp_message(message)
-                message = "\n\n"
-    return message
-
-
-def print_error_message(http_error):
-    error_message = {
-        'status_code': http_error.response.status_code,
-        'content': http_error.response.content
-    }
-    print(error_message)
+@click.option("-n", "--notify_on",
+              type=click.Choice(['whatsapp', 'telegram']),
+              required=True,
+              help="Receive notification on whatsapp/telegram")
+def district_wise(district_id, date, age_filter, notify_on):
+    check_district_wise_slots(district_id, date, age_filter, notify_on)
 
 
 @main.command(name="get-state-id")
@@ -188,7 +124,7 @@ def get_district_id(state_id, district_name):
         print_error_message(e)
 
 
-@main.command()
+@main.command(name="continuously-for-district")
 @click.option("-dId", "--district_id",
               type=str,
               required=True,
@@ -205,10 +141,127 @@ def get_district_id(state_id, district_name):
               type=int,
               required=True,
               help="Interval in seconds")
-def continuously(district_id, date, age_filter, interval):
+@click.option("-n", "--notify_on",
+              type=click.Choice(['whatsapp', 'telegram']),
+              required=True,
+              help="Receive notification on whatsapp/telegram")
+def continuously_for_district(district_id, date, age_filter, interval, notify_on):
     while True:
-        check_district_wise_slots(district_id, date, age_filter)
+        check_district_wise_slots(district_id, date, age_filter, notify_on)
         time.sleep(interval)
+
+
+@main.command(name="continuously-for-pincode")
+@click.option("-pin", "--pin_code",
+              type=str,
+              required=True,
+              help="Pin code of your area to search for appointments")
+@click.option("-d", "--date",
+              type=str,
+              required=True,
+              help="Date for which appointments are to be checked")
+@click.option("-af", "--age_filter",
+              type=int,
+              default=18,
+              help="Filter only 18 plus or 45 plus appointments")
+@click.option("-i", "--interval",
+              type=int,
+              required=True,
+              help="Interval in seconds to check for available slots")
+@click.option("-n", "--notify_on",
+              type=click.Choice(['whatsapp', 'telegram']),
+              required=True,
+              help="Receive notification on whatsapp/telegram")
+def continuously_for_pincode(pin_code, date, age_filter, interval, notify_on):
+    while True:
+        check_pincode_wise_slots(pin_code, date, age_filter, notify_on)
+        time.sleep(interval)
+
+
+def check_pincode_wise_slots(pin_code, date, age_filter, notify_on):
+    if age_filter == 18 or age_filter == 45:
+        url = BASE_API + find_by_pin
+        params = {
+            "pincode": pin_code,
+            "date": date
+        }
+        headers = {
+            "accept": "application/json",
+            "Accept-Language": "hi_IN",
+            "user-agent": "*"
+        }
+        try:
+            response = requests.get(url=url, headers=headers, params=params)
+            response.raise_for_status()
+            response_data = response.json()
+            if len(response_data['sessions']) > 0:
+                create_message_from_session(response_data['sessions'], age_filter, notify_on)
+            else:
+                print("No slots are available for pincode: ", pin_code)
+        except requests.HTTPError as e:
+            print_error_message(e)
+    else:
+        raise ValueError("Possible values for age_filter is 18 or 45")
+
+
+def check_district_wise_slots(district_id, date, age_filter, notify_on):
+    if age_filter == 18 or age_filter == 45:
+        print("Checking for available slots in district " + str(district_id) + ", for date " + str(
+            date) + ",for min_age: " + str(age_filter))
+        url = BASE_API + find_by_district
+        params = {
+            "district_id": district_id,
+            "date": date
+        }
+        headers = {
+            "accept": "application/json",
+            "Accept-Language": "hi_IN",
+            "user-agent": "*"
+        }
+        try:
+            response = requests.get(url=url, headers=headers, params=params)
+            response.raise_for_status()
+            response_data = response.json()
+            if len(response_data['sessions']) > 0:
+                create_message_from_session(response_data['sessions'], age_filter, notify_on)
+            else:
+                print("No slots are available for district: ", district_id)
+        except requests.HTTPError as e:
+            print_error_message(e)
+    else:
+        raise ValueError("Possible values for age_filter is 18 or 45")
+
+
+def create_message_from_session(sessions, age_filter, notify_on):
+    message = "Following Centers are available \n\n"
+    for session in sessions:
+        if session['available_capacity'] > 0 and session['min_age_limit'] == age_filter:
+            print(str(session['pincode']) + "," + str(session['available_capacity']))
+            if cache.get(session['pincode']) is None:
+                cache.set(session['pincode'], 1)
+                message = message + "Name : " + str(session['name']) + "\n"
+                message = message + "Pincode: " + str(session['pincode']) + "\n"
+                message = message + "Vaccine Type: " + str(session['vaccine']) + "\n"
+                message = message + "Available Capacity: " + str(session['available_capacity']) + "\n"
+                message = message + "Min Age: " + str(session['min_age_limit']) + "\n"
+                send_message(message, notify_on)
+                message = "\n\n"
+    return message
+
+
+def send_message(message, notify_on):
+    if notify_on == "whatsapp":
+        send_whatsapp_message(message)
+    elif notify_on == "telegram":
+        send_telegram_message(message)
+
+
+def print_error_message(http_error):
+    error_message = {
+        'status_code': http_error.response.status_code,
+        'content': http_error.response.content
+    }
+    print(error_message)
 
 
 if __name__ == '__main__':
