@@ -11,7 +11,7 @@ CLI to check for Covid Vaccine appointments pincode or district wise and get not
 1. On Telegram, search @BotFather, click on START button or send `/start` message
 2. Send `newbot` message and follow the instructions to set the name and username for your bot
 3. You will receive a token to access HTTP API, this token is your `TELEGRAM_BOT_TOKEN`
-4. To get your chatId Open a new tab in browser, enter https://api.telegram.org/bot<token>/getUpdates
+4. To get your chatId Open a new tab in browser, enter `https://api.telegram.org/bot<token>/getUpdates`
    You will get the response as
     ```
     "ok":true,"result":[{"update_id":334363465,
