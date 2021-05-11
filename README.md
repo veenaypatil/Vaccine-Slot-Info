@@ -12,7 +12,7 @@ CLI to check for Covid Vaccine appointments pincode or district wise and get not
 2. Send `newbot` message and follow the instructions to set the name and username for your bot
 3. You will receive a token to access HTTP API, this token is your `TELEGRAM_BOT_TOKEN`
 4. To get your chatId Open a new tab in browser, enter https://api.telegram.org/bot<token>/getUpdates
-   You will get the response as 
+   You will get the response as
     ```
     "ok":true,"result":[{"update_id":334363465,
     "message":{"message_id":3,"from":{"id":130XXXXXX,"is_bot":false,"first_name":"Vinay",
@@ -20,6 +20,7 @@ CLI to check for Covid Vaccine appointments pincode or district wise and get not
     "chat":{"id":130XXXXXX,"first_name":"Vinay","type":"private"},"date":1620703638,"text":"/start",
     "entities":[{"offset":0,"length":6,"type":"bot_command"}]}}]}
     ```
+   `TELEGRAM_BOT_CHAT_ID` will be `130XXXXXX` from the above response
 5. Export the following env variables
 ```
 export TELEGRAM_BOT_TOKEN=<from step 3 above>
