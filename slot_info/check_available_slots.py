@@ -151,7 +151,7 @@ def continuously_for_district(district_id, date, age_filter, interval, notify_on
         time.sleep(interval)
 
 
-@main.command(name="continuously_for_pincode")
+@main.command(name="continuously-for-pincode")
 @click.option("-pin", "--pin_code",
               type=str,
               required=True,
