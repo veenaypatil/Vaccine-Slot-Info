@@ -1,13 +1,16 @@
 import time
 import click
 import requests
+
 from slot_info.cowin_api import *
+from slot_info.session_requests import SessionRequest
 from slot_info.telegram import send_telegram_message
 from slot_info.whatsapp import send_whatsapp_message
 from cacheout import Cache
 
 # cache ttl is of 1 minute, this is to avoid sending multiple notifications
 cache = Cache(ttl=60)
+session_requests = SessionRequest()
 
 
 @click.group()
@@ -67,15 +70,8 @@ def district_wise(district_id, date, age_filter, notify_on):
               help="Get's the ID of the state name provided")
 def get_state_id(state_name):
     url = BASE_API + get_all_states
-    headers = {
-        "accept": "application/json",
-        "Accept-Language": "hi_IN",
-        "user-agent": "*"
-    }
     try:
-        response = requests.get(url=url, headers=headers)
-        response.raise_for_status()
-        response_data = response.json()
+        response_data = session_requests.get(url)
         states = response_data['states']
         state_id = None
         for state in states:
@@ -86,8 +82,8 @@ def get_state_id(state_name):
             print("Provide proper name of the state")
         else:
             print("State ID is : ", state_id)
-    except requests.HTTPError as e:
-        print_error_message(e)
+    except requests.HTTPError as http_error:
+        print_error_message(http_error)
 
 
 @main.command(name="get-district-id")
@@ -101,15 +97,8 @@ def get_state_id(state_name):
               help="Name of the district for which ID is to be retrieved")
 def get_district_id(state_id, district_name):
     url = BASE_API + get_all_districts.format(state_id)
-    headers = {
-        "accept": "application/json",
-        "Accept-Language": "hi_IN",
-        "user-agent": "*"
-    }
     try:
-        response = requests.get(url=url, headers=headers)
-        response.raise_for_status()
-        response_data = response.json()
+        response_data = session_requests.get(url)
         districts = response_data['districts']
         district_id = None
         for district in districts:
@@ -120,8 +109,8 @@ def get_district_id(state_id, district_name):
             print("Provide proper name of the district")
         else:
             print("District ID is : ", district_id)
-    except requests.HTTPError as e:
-        print_error_message(e)
+    except requests.HTTPError as http_error:
+        print_error_message(http_error)
 
 
 @main.command(name="continuously-for-district")
@@ -185,21 +174,14 @@ def check_pincode_wise_slots(pin_code, date, age_filter, notify_on):
             "pincode": pin_code,
             "date": date
         }
-        headers = {
-            "accept": "application/json",
-            "Accept-Language": "hi_IN",
-            "user-agent": "*"
-        }
         try:
-            response = requests.get(url=url, headers=headers, params=params)
-            response.raise_for_status()
-            response_data = response.json()
+            response_data = session_requests.get(url=url, params=params)
             if len(response_data['sessions']) > 0:
                 create_message_from_session(response_data['sessions'], age_filter, notify_on)
             else:
                 print("No slots are available for pincode: ", pin_code)
-        except requests.HTTPError as e:
-            print_error_message(e)
+        except requests.HTTPError as http_error:
+            print_error_message(http_error)
     else:
         raise ValueError("Possible values for age_filter is 18 or 45")
 
@@ -213,21 +195,15 @@ def check_district_wise_slots(district_id, date, age_filter, notify_on):
             "district_id": district_id,
             "date": date
         }
-        headers = {
-            "accept": "application/json",
-            "Accept-Language": "hi_IN",
-            "user-agent": "*"
-        }
+
         try:
-            response = requests.get(url=url, headers=headers, params=params)
-            response.raise_for_status()
-            response_data = response.json()
+            response_data = session_requests.get(url=url, params=params)
             if len(response_data['sessions']) > 0:
                 create_message_from_session(response_data['sessions'], age_filter, notify_on)
             else:
                 print("No slots are available for district: ", district_id)
-        except requests.HTTPError as e:
-            print_error_message(e)
+        except requests.HTTPError as http_error:
+            print_error_message(http_error)
     else:
         raise ValueError("Possible values for age_filter is 18 or 45")
 
