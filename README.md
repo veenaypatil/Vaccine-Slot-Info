@@ -2,16 +2,17 @@
 CLI to check for Covid Vaccine appointments pincode or district wise and get notified on WhatsApp/Telegram.
 
 ### Pre-requisites
-1. Python 3.6+
+1. Python 3.6+ , you can install it from  https://www.python.org/downloads/
 2. Either Telegram Account
 3. Or Twilio Free Trail Account for whatsapp notification 
 
 
 ### Telegram Bot Configuration
 1. On Telegram, search @BotFather, click on START button or send `/start` message
-2. Send `newbot` message and follow the instructions to set the name and username for your bot
+2. Send `/newbot` message and follow the instructions to set the name and username for your bot
 3. You will receive a token to access HTTP API, this token is your `TELEGRAM_BOT_TOKEN`
-4. To get your chatId Open a new tab in browser, enter `https://api.telegram.org/bot<token>/getUpdates`
+4. Goto your bot name in Telegram and send `/start` message
+5. To get your chatId Open a new tab in browser, enter `https://api.telegram.org/bot<token>/getUpdates`
    You will get the response as
     ```
     "ok":true,"result":[{"update_id":334363465,
@@ -21,16 +22,16 @@ CLI to check for Covid Vaccine appointments pincode or district wise and get not
     "entities":[{"offset":0,"length":6,"type":"bot_command"}]}}]}
     ```
    `TELEGRAM_BOT_CHAT_ID` will be `130XXXXXX` from the above response
-5. Export the following env variables
+6. Export the following env variables on your shell
 ```
 export TELEGRAM_BOT_TOKEN=<from step 3 above>
-export TELEGRAM_BOT_CHAT_ID=<from step 4 above>
+export TELEGRAM_BOT_CHAT_ID=<from step 5 above>
 ```
 
-### Twilio Configuration
+### Twilio Configuration for Whatsapp Notification
 1. Create a new Twilio Trail Account - www.twilio.com/referral/PfBNJy 
 2. Follow the steps here https://www.twilio.com/console/sms/whatsapp/sandbox
-3. Export the following env variables
+3. Export the following env variables on your shell
 ```
 export TWILIO_ACCOUNT_SID="twilio_account_sid" // you will get this here https://www.twilio.com/console
 export TWILIO_AUTH_TOKEN="twilio_auth_token" // you will get this here https://www.twilio.com/console
@@ -43,7 +44,11 @@ export TO_MOBILE_NUMBER="your_mobile_number"
 1. Download release directly by clicking on slotinfo-1.0.tar.gz here - https://github.com/veenaypatil/Vaccine-Slot-Info/releases/tag/v1.1
 ```
 sudo pip install <downloaded_folder>/slotinfo-1.0.tar.gz
+or 
+sudo pip3 install <downloaded_folder>/slotinfo-1.0.tar.gz
 ```
+Checkout how to install pip here - https://www.techgeekbuzz.com/how-to-install-python-pip-on-windows-mac-and-linux/
+
 2. Or Clone the code and install
 ```
 python setup.py sdist
