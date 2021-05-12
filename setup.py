@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-requirements = ['requests', 'click', 'twilio', 'cacheout']
+requirements = ['requests', 'click', 'twilio', 'cacheout', 'urllib3']
 
 setup(
     name="slotinfo",

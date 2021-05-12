@@ -2,3 +2,4 @@ requests
 click
 twilio
 cacheout
+urllib3
