@@ -1,4 +1,6 @@
 import time
+from datetime import datetime
+
 import click
 import requests
 
@@ -39,6 +41,9 @@ def main():
               required=True,
               help="Receive notification on whatsapp/telegram")
 def pincode_wise(pin_code, date, age_filter, notify_on):
+    """
+    get pin code wise available slots on a specific date in a given pin.
+    """
     check_pincode_wise_slots(pin_code, date, age_filter, notify_on)
 
 
@@ -60,6 +65,9 @@ def pincode_wise(pin_code, date, age_filter, notify_on):
               required=True,
               help="Receive notification on whatsapp/telegram")
 def district_wise(district_id, date, age_filter, notify_on):
+    """
+    get district wise available slots on a specific date in a given district.
+    """
     check_district_wise_slots(district_id, date, age_filter, notify_on)
 
 
@@ -67,8 +75,11 @@ def district_wise(district_id, date, age_filter, notify_on):
 @click.option("-sn", "--state_name",
               type=str,
               required=True,
-              help="Get's the ID of the state name provided")
+              help="Name of the state for which ID is to be retrieved")
 def get_state_id(state_name):
+    """
+    Get's the ID of the state name
+    """
     url = BASE_API + get_all_states
     try:
         response_data = session_requests.get(url)
@@ -90,12 +101,15 @@ def get_state_id(state_name):
 @click.option("-sId", "--state_id",
               type=str,
               required=True,
-              help="ID of the state, if you do no know the state ID run get-state-id command")
+              help="ID of the state, if you do not know the state ID run get-state-id command")
 @click.option("-dn", "--district_name",
               type=str,
               required=True,
               help="Name of the district for which ID is to be retrieved")
 def get_district_id(state_id, district_name):
+    """
+    Get's the ID of the district name
+    """
     url = BASE_API + get_all_districts.format(state_id)
     try:
         response_data = session_requests.get(url)
@@ -135,8 +149,43 @@ def get_district_id(state_id, district_name):
               required=True,
               help="Receive notification on whatsapp/telegram")
 def continuously_for_district(district_id, date, age_filter, interval, notify_on):
+    """
+    Continuously check for available slots in district for a specific date after every x interval seconds
+    and notify on whatsapp/telegram
+    """
     while True:
         check_district_wise_slots(district_id, date, age_filter, notify_on)
+        time.sleep(interval)
+
+
+@main.command(name="continuously-for-district-next7days")
+@click.option("-dId", "--district_id",
+              type=str,
+              required=True,
+              help="Provide district Id to check for appointments")
+@click.option("-d", "--date",
+              type=str,
+              required=True,
+              help="Date for which appointments are to be checked for next 7 days")
+@click.option("-af", "--age_filter",
+              type=int,
+              default=18,
+              help="Filter only 18 plus or 45 plus appointments")
+@click.option("-i", "--interval",
+              type=int,
+              required=True,
+              help="Interval in seconds")
+@click.option("-n", "--notify_on",
+              type=click.Choice(['whatsapp', 'telegram']),
+              required=True,
+              help="Receive notification on whatsapp/telegram")
+def continuously_for_district_next7days(district_id, date, age_filter, interval, notify_on):
+    """
+    Continuously check for available slots in district for next 7 days after every x interval seconds
+    and notify on whatsapp/telegram
+    """
+    while True:
+        check_district_wise_slots_next7days(district_id, date, age_filter, notify_on)
         time.sleep(interval)
 
 
@@ -162,64 +211,191 @@ def continuously_for_district(district_id, date, age_filter, interval, notify_on
               required=True,
               help="Receive notification on whatsapp/telegram")
 def continuously_for_pincode(pin_code, date, age_filter, interval, notify_on):
+    """
+    Continuously check for available slots in pin code for a specific date after every x interval seconds
+    and notify on whatsapp/telegram
+    """
     while True:
         check_pincode_wise_slots(pin_code, date, age_filter, notify_on)
         time.sleep(interval)
 
 
+@main.command(name="continuously-for-pincode-next7days")
+@click.option("-pin", "--pin_code",
+              type=str,
+              required=True,
+              help="Pin code of your area to search for appointments")
+@click.option("-d", "--date",
+              type=str,
+              required=True,
+              help="Date for which appointments are to be checked for next 7 days")
+@click.option("-af", "--age_filter",
+              type=int,
+              default=18,
+              help="Filter only 18 plus or 45 plus appointments")
+@click.option("-i", "--interval",
+              type=int,
+              required=True,
+              help="Interval in seconds to check for available slots")
+@click.option("-n", "--notify_on",
+              type=click.Choice(['whatsapp', 'telegram']),
+              required=True,
+              help="Receive notification on whatsapp/telegram")
+def continuously_for_pincode_next7days(pin_code, date, age_filter, interval, notify_on):
+    """
+    Continuously check for available slots in pin code for next 7 days after every x interval seconds
+    and notify on whatsapp/telegram
+    """
+    while True:
+        check_pincode_wise_slots_next7days(pin_code, date, age_filter, notify_on)
+        time.sleep(interval)
+
+
+@main.command(name="pincode-wise-next7days")
+@click.option("-pin", "--pin_code",
+              type=str,
+              required=True,
+              help="Pin code of your area to search for appointments")
+@click.option("-d", "--date",
+              type=str,
+              required=True,
+              help="Date for which appointments are to be checked for next 7 days")
+@click.option("-af", "--age_filter",
+              type=int,
+              default=18,
+              help="Filter only 18 plus or 45 plus appointments")
+@click.option("-n", "--notify_on",
+              type=click.Choice(['whatsapp', 'telegram']),
+              required=True,
+              help="Receive notification on whatsapp/telegram")
+def pincode_wise_next7days(pin_code, date, age_filter, notify_on):
+    """
+    Check for available slots in pin code for next 7 days from the date provided
+    """
+    check_pincode_wise_slots_next7days(pin_code, date, age_filter, notify_on)
+
+
+@main.command(name="district-wise-next7days")
+@click.option("-dId", "--district_id",
+              type=str,
+              required=True,
+              help="ID of the district, if you do no know the district ID run get-district-id command")
+@click.option("-d", "--date",
+              type=str,
+              required=True,
+              help="Date for which appointments are to be checked for next 7 days")
+@click.option("-af", "--age_filter",
+              type=int,
+              default=18,
+              help="Filter only 18 plus or 45 plus appointments")
+@click.option("-n", "--notify_on",
+              type=click.Choice(['whatsapp', 'telegram']),
+              required=True,
+              help="Receive notification on whatsapp/telegram")
+def district_wise_next7days(district_id, date, age_filter, notify_on):
+    """
+    Check for available slots in district for next 7 days from the date provided
+    """
+    check_district_wise_slots_next7days(district_id, date, age_filter, notify_on)
+
+
 def check_pincode_wise_slots(pin_code, date, age_filter, notify_on):
-    if age_filter == 18 or age_filter == 45:
-        url = BASE_API + find_by_pin
-        params = {
-            "pincode": pin_code,
-            "date": date
-        }
-        try:
-            response_data = session_requests.get(url=url, params=params)
-            if len(response_data['sessions']) > 0:
-                create_message_from_session(response_data['sessions'], age_filter, notify_on)
-            else:
-                print("No slots are available for pincode: ", pin_code)
-        except requests.HTTPError as http_error:
-            print_error_message(http_error)
-    else:
-        raise ValueError("Possible values for age_filter is 18 or 45")
+    validate_inputs(date, age_filter)
+    url = BASE_API + find_by_pin
+    params = {
+        "pincode": pin_code,
+        "date": date
+    }
+    try:
+        response_data = session_requests.get(url=url, params=params)
+        if len(response_data['sessions']) > 0:
+            create_message_from_session(response_data['sessions'], age_filter, notify_on)
+        else:
+            print("No slots are available for pincode: ", pin_code)
+    except requests.HTTPError as http_error:
+        print_error_message(http_error)
+
+
+def check_pincode_wise_slots_next7days(pin_code, date, age_filter, notify_on):
+    validate_inputs(date, age_filter)
+    url = BASE_API + calendar_by_pin
+
+    params = {
+        "pincode": pin_code,
+        "date": date
+    }
+    try:
+        response_data = session_requests.get(url=url, params=params)
+        if len(response_data['centers']) > 0:
+            for center in response_data['centers']:
+                for session in center['sessions']:
+                    session['pincode'] = center['pincode']
+                    session['name'] = center['name']
+                    sessions = [session]
+                    create_message_from_session(sessions, age_filter, notify_on)
+        else:
+            print("There are no centers available for this pin code")
+    except requests.HTTPError as http_error:
+        print_error_message(http_error)
 
 
 def check_district_wise_slots(district_id, date, age_filter, notify_on):
-    if age_filter == 18 or age_filter == 45:
-        print("Checking for available slots in district " + str(district_id) + ", for date " + str(
-            date) + ",for min_age: " + str(age_filter))
-        url = BASE_API + find_by_district
-        params = {
-            "district_id": district_id,
-            "date": date
-        }
+    validate_inputs(date, age_filter)
+    print("Checking for available slots in district " + str(district_id) + ", for date " + str(
+        date) + ",for min_age: " + str(age_filter))
+    url = BASE_API + find_by_district
+    params = {
+        "district_id": district_id,
+        "date": date
+    }
 
-        try:
-            response_data = session_requests.get(url=url, params=params)
-            if len(response_data['sessions']) > 0:
-                create_message_from_session(response_data['sessions'], age_filter, notify_on)
-            else:
-                print("No slots are available for district: ", district_id)
-        except requests.HTTPError as http_error:
-            print_error_message(http_error)
-    else:
-        raise ValueError("Possible values for age_filter is 18 or 45")
+    try:
+        response_data = session_requests.get(url=url, params=params)
+        if len(response_data['sessions']) > 0:
+            create_message_from_session(response_data['sessions'], age_filter, notify_on)
+        else:
+            print("No slots are available for district: ", district_id)
+    except requests.HTTPError as http_error:
+        print_error_message(http_error)
+
+
+def check_district_wise_slots_next7days(district_id, date, age_filter, notify_on):
+    validate_inputs(date, age_filter)
+    url = BASE_API + calendar_by_district
+    params = {
+        "district_id": district_id,
+        "date": date
+    }
+
+    try:
+        response_data = session_requests.get(url=url, params=params)
+        if len(response_data['centers']) > 0:
+            for center in response_data['centers']:
+                for session in center['sessions']:
+                    session['pincode'] = center['pincode']
+                    session['name'] = center['name']
+                    sessions = [session]
+                    create_message_from_session(sessions, age_filter, notify_on)
+        else:
+            print("There are no centers available for this district")
+    except requests.HTTPError as http_error:
+        print_error_message(http_error)
 
 
 def create_message_from_session(sessions, age_filter, notify_on):
     message = "Following Centers are available \n\n"
     for session in sessions:
         if session['available_capacity'] > 0 and session['min_age_limit'] == age_filter:
-            print(str(session['pincode']) + "," + str(session['available_capacity']))
-            if cache.get(session['pincode']) is None:
-                cache.set(session['pincode'], 1)
+            print("Name: " + str(session['name']) + ", PinCode: " + str(session['pincode']) + ", Available: " + str(
+                session['available_capacity']) + ", Date :" + str(session['date']))
+            if cache.get(str(session['pincode']) + session['name'] + str(session['date'])) is None:
+                cache.set(str(session['pincode']) + session['name'] + str(session['date']), 1)
                 message = message + "Name : " + str(session['name']) + "\n"
                 message = message + "Pincode: " + str(session['pincode']) + "\n"
                 message = message + "Vaccine Type: " + str(session['vaccine']) + "\n"
                 message = message + "Available Capacity: " + str(session['available_capacity']) + "\n"
                 message = message + "Min Age: " + str(session['min_age_limit']) + "\n"
+                message = message + "Date: " + str(session['date']) + "\n"
                 send_message(message, notify_on)
                 message = "\n\n"
     return message
@@ -230,6 +406,15 @@ def send_message(message, notify_on):
         send_whatsapp_message(message)
     elif notify_on == "telegram":
         send_telegram_message(message)
+
+
+def validate_inputs(date, age_filter):
+    if age_filter != 18 and age_filter != 45:
+        raise ValueError("Possible values for age_filter is 18 or 45")
+    try:
+        datetime.strptime(date, "%d-%m-%Y")
+    except ValueError:
+        raise ValueError("Date should be provided in DD-MM-YYYY format, for example: 10-05-2021")
 
 
 def print_error_message(http_error):

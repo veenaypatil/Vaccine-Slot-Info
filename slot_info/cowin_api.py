@@ -6,6 +6,10 @@ find_by_pin = "v2/appointment/sessions/public/findByPin"
 
 find_by_district = "v2/appointment/sessions/public/findByDistrict"
 
+calendar_by_pin = "v2/appointment/sessions/public/calendarByPin"
+
+calendar_by_district = "v2/appointment/sessions/public/calendarByDistrict"
+
 # lookup state and district
 
 get_all_states = "v2/admin/location/states"
