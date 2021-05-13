@@ -40,7 +40,9 @@ export TO_MOBILE_NUMBER="your_mobile_number"
 ```
 Note: Twilio Sandbox lasts for 72 hours after which notification to whatsapp will not come. You will have to again join
 the sandbox
-<Screenshot>
+
+<img width="940" alt="Screenshot 2021-05-13 at 11 04 15 AM" src="https://user-images.githubusercontent.com/52563354/118082656-326ac580-b3db-11eb-82e6-116481e3de6f.png">
+
 
 ### Installation steps to use `slotinfo` command
 
