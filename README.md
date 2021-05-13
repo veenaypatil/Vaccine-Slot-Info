@@ -67,9 +67,11 @@ sudo pip install dist/slotinfo-1.0.tar.gz
   continuously-for-pincode
   continuously-for-pincode-next7days
   district-wise
+  district-wise-next7days
+  pincode-wise
+  pincode-wise-next7days
   get-district-id
   get-state-id
-  pincode-wise
 ```
 
 ### CLI commands usage
