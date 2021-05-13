@@ -197,27 +197,27 @@ def continuously_for_district_next7days(district_id, date, age_filter, interval,
         time.sleep(interval)
 
 
-# @main.command(name="continuously-for-pincode")
-# @click.option("-pin", "--pin_code",
-#               type=str,
-#               required=True,
-#               help="Pin code of your area to search for appointments")
-# @click.option("-d", "--date",
-#               type=str,
-#               required=True,
-#               help="Date for which appointments are to be checked")
-# @click.option("-af", "--age_filter",
-#               type=int,
-#               default=18,
-#               help="Filter only 18 plus or 45 plus appointments")
-# @click.option("-i", "--interval",
-#               type=int,
-#               required=True,
-#               help="Interval in seconds to check for available slots")
-# @click.option("-n", "--notify_on",
-#               type=click.Choice(['whatsapp', 'telegram']),
-#               required=True,
-#               help="Receive notification on whatsapp/telegram")
+@main.command(name="continuously-for-pincode")
+@click.option("-pin", "--pin_code",
+              type=str,
+              required=True,
+              help="Pin code of your area to search for appointments")
+@click.option("-d", "--date",
+              type=str,
+              required=True,
+              help="Date for which appointments are to be checked")
+@click.option("-af", "--age_filter",
+              type=int,
+              default=18,
+              help="Filter only 18 plus or 45 plus appointments")
+@click.option("-i", "--interval",
+              type=int,
+              required=True,
+              help="Interval in seconds to check for available slots")
+@click.option("-n", "--notify_on",
+              type=click.Choice(['whatsapp', 'telegram']),
+              required=True,
+              help="Receive notification on whatsapp/telegram")
 def continuously_for_pincode(pin_code, date, age_filter, interval, notify_on):
     """
     Continuously check for available slots in pin code for a specific date after every x interval seconds
@@ -230,27 +230,27 @@ def continuously_for_pincode(pin_code, date, age_filter, interval, notify_on):
         time.sleep(interval)
 
 
-# @main.command(name="continuously-for-pincode-next7days")
-# @click.option("-pin", "--pin_code",
-#               type=str,
-#               required=True,
-#               help="Pin code of your area to search for appointments")
-# @click.option("-d", "--date",
-#               type=str,
-#               required=True,
-#               help="Date for which appointments are to be checked for next 7 days")
-# @click.option("-af", "--age_filter",
-#               type=int,
-#               default=18,
-#               help="Filter only 18 plus or 45 plus appointments")
-# @click.option("-i", "--interval",
-#               type=int,
-#               required=True,
-#               help="Interval in seconds to check for available slots")
-# @click.option("-n", "--notify_on",
-#               type=click.Choice(['whatsapp', 'telegram']),
-#               required=True,
-#               help="Receive notification on whatsapp/telegram")
+@main.command(name="continuously-for-pincode-next7days")
+@click.option("-pin", "--pin_code",
+              type=str,
+              required=True,
+              help="Pin code of your area to search for appointments")
+@click.option("-d", "--date",
+              type=str,
+              required=True,
+              help="Date for which appointments are to be checked for next 7 days")
+@click.option("-af", "--age_filter",
+              type=int,
+              default=18,
+              help="Filter only 18 plus or 45 plus appointments")
+@click.option("-i", "--interval",
+              type=int,
+              required=True,
+              help="Interval in seconds to check for available slots")
+@click.option("-n", "--notify_on",
+              type=click.Choice(['whatsapp', 'telegram']),
+              required=True,
+              help="Receive notification on whatsapp/telegram")
 def continuously_for_pincode_next7days(pin_code, date, age_filter, interval, notify_on):
     """
     Continuously check for available slots in pin code for next 7 days after every x interval seconds
