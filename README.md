@@ -38,6 +38,9 @@ export TWILIO_AUTH_TOKEN="twilio_auth_token" // you will get this here https://w
 export FROM_MOBILE_NUMBER="twilio_number" // you will get this number after following the steps https://www.twilio.com/console/sms/whatsapp/sandbox
 export TO_MOBILE_NUMBER="your_mobile_number"
 ```
+Note: Twilio Sandbox lasts for 72 hours after which notification to whatsapp will not come. You will have to again join
+the sandbox
+<Screenshot>
 
 ### Installation steps to use `slotinfo` command
 
@@ -58,7 +61,9 @@ sudo pip install dist/slotinfo-1.0.tar.gz
 ### CLI commands provided by this utility
 ```
   continuously-for-district
+  continuously-for-district-next7days
   continuously-for-pincode
+  continuously-for-pincode-next7days
   district-wise
   get-district-id
   get-state-id
@@ -76,14 +81,26 @@ slotinfo get-district-id --state_id 21 --district_name Pune
 3. Check available appointment slots district wise
 slotinfo district-wise --district_id 334 --date 10-05-2021 --age_filter 18 --notify_on whatsapp
 
-4. Check available appointment slots pincode wise
+4. Check available appointment slots district wise for next 7 days
+slotinfo district-wise-next7days --district_id 334 --date 10-05-2021 --age_filter 18 --notify_on whatsapp
+
+5. Check available appointment slots pincode wise
+slotinfo pincode-wise-next7days -pin 411015 --date 10-05-2021 --age_filter 45 --notify_on telegram
+
+6. Check available appointment slots pincode wise
 slotinfo pincode-wise -pin 411015 --date 10-05-2021 --age_filter 45 --notify_on telegram
 
-5. Run the script continously to check for available appointments in a district after evey x(seconds) interval
+7. Run the cmd continously to check for available appointments in a district after evey x(seconds) interval
 slotinfo continuously-for-district --district_id 363 --date 10-05-2021 --age_filter 18 --interval 2 --notify_on telegram
 
-6. Run the script continously to check for available appointments in pin code after evey x(seconds) interval
+8. Run the cmd continously to check for available appointments in a district for next 7 days after evey x(seconds) interval
+slotinfo continuously-for-district-next7days --district_id 363 --date 10-05-2021 --age_filter 18 --interval 2 --notify_on telegram
+
+9. Run the cmd continously to check for available appointments in pin code after evey x(seconds) interval
 slotinfo continuously-for-pincode --pin_code 41105 --date 10-05-2021 --age_filter 18 --interval 2 --notify_on whatsapp
+
+10. Run the cmd continously to check for available appointments in pin code for next 7 days after evey x(seconds) interval
+slotinfo continuously-for-pincode-next7days --pin_code 41105 --date 10-05-2021 --age_filter 18 --interval 2 --notify_on whatsapp
 ```
 
 To get the help of any command use `--help` option with command name
