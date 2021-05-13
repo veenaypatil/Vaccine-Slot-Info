@@ -440,4 +440,4 @@ def print_error_message(http_error):
 
 
 if __name__ == '__main__':
-    continuously_for_pincode('411015', '11-05-2021', 45,2, 'telegram')
+    main()
