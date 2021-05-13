@@ -44,6 +44,8 @@ def pincode_wise(pin_code, date, age_filter, notify_on):
     """
     get pin code wise available slots on a specific date in a given pin.
     """
+    print("Checking for available slots in pin code " + str(pin_code) + ", for date " + str(date) +
+          ",for min_age: " + str(age_filter))
     check_pincode_wise_slots(pin_code, date, age_filter, notify_on)
 
 
@@ -68,6 +70,8 @@ def district_wise(district_id, date, age_filter, notify_on):
     """
     get district wise available slots on a specific date in a given district.
     """
+    print("Checking for available slots in district " + str(district_id) + ", for date " + str(
+        date) + ",for min_age: " + str(age_filter))
     check_district_wise_slots(district_id, date, age_filter, notify_on)
 
 
@@ -153,6 +157,8 @@ def continuously_for_district(district_id, date, age_filter, interval, notify_on
     Continuously check for available slots in district for a specific date after every x interval seconds
     and notify on whatsapp/telegram
     """
+    print("Checking for available slots in district " + str(district_id) + ", for date " + str(
+        date) + ",for min_age: " + str(age_filter))
     while True:
         check_district_wise_slots(district_id, date, age_filter, notify_on)
         time.sleep(interval)
@@ -184,6 +190,8 @@ def continuously_for_district_next7days(district_id, date, age_filter, interval,
     Continuously check for available slots in district for next 7 days after every x interval seconds
     and notify on whatsapp/telegram
     """
+    print("Checking for available slots in district " + str(district_id) + ", for next 7 days starting from date:  "
+          + str(date) + ",for min_age: " + str(age_filter))
     while True:
         check_district_wise_slots_next7days(district_id, date, age_filter, notify_on)
         time.sleep(interval)
@@ -215,6 +223,8 @@ def continuously_for_pincode(pin_code, date, age_filter, interval, notify_on):
     Continuously check for available slots in pin code for a specific date after every x interval seconds
     and notify on whatsapp/telegram
     """
+    print("Checking for available slots in pin code " + str(pin_code) + ", for date " + str(date) +
+          ",for min_age: " + str(age_filter))
     while True:
         check_pincode_wise_slots(pin_code, date, age_filter, notify_on)
         time.sleep(interval)
@@ -246,6 +256,8 @@ def continuously_for_pincode_next7days(pin_code, date, age_filter, interval, not
     Continuously check for available slots in pin code for next 7 days after every x interval seconds
     and notify on whatsapp/telegram
     """
+    print("Checking for available slots in pin code " + str(pin_code) + ", for next 7 days starting from date " + str(
+        date) + ",for min_age: " + str(age_filter))
     while True:
         check_pincode_wise_slots_next7days(pin_code, date, age_filter, notify_on)
         time.sleep(interval)
@@ -272,6 +284,8 @@ def pincode_wise_next7days(pin_code, date, age_filter, notify_on):
     """
     Check for available slots in pin code for next 7 days from the date provided
     """
+    print("Checking for available slots in pin code " + str(pin_code) + ", for next 7 days starting from date "
+          + str(date) + ",for min_age: " + str(age_filter))
     check_pincode_wise_slots_next7days(pin_code, date, age_filter, notify_on)
 
 
@@ -296,6 +310,8 @@ def district_wise_next7days(district_id, date, age_filter, notify_on):
     """
     Check for available slots in district for next 7 days from the date provided
     """
+    print("Checking for available slots in district " + str(district_id) + ", for next 7 days starting from date "
+          + str(date) + ",for min_age: " + str(age_filter))
     check_district_wise_slots_next7days(district_id, date, age_filter, notify_on)
 
 
@@ -341,8 +357,6 @@ def check_pincode_wise_slots_next7days(pin_code, date, age_filter, notify_on):
 
 def check_district_wise_slots(district_id, date, age_filter, notify_on):
     validate_inputs(date, age_filter)
-    print("Checking for available slots in district " + str(district_id) + ", for date " + str(
-        date) + ",for min_age: " + str(age_filter))
     url = BASE_API + find_by_district
     params = {
         "district_id": district_id,
