@@ -53,13 +53,13 @@ def main():
               multiple=True,
               default=[],
               help="Dose number for which appointments are to be checked")
-def pincode_wise(pin_code, date, age_filter, notify_on, vaccine_type):
+def pincode_wise(pin_code, date, age_filter, notify_on, vaccine_type, dose_number):
     """
     get pin code wise available slots on a specific date in a given pin.
     """
     print("Checking for available slots in pin code " + str(pin_code) + ", for date " + str(date) +
           ",for min_age: " + str(age_filter))
-    check_pincode_wise_slots(pin_code, date, age_filter, notify_on, vaccine_type)
+    check_pincode_wise_slots(pin_code, date, age_filter, notify_on, vaccine_type, dose_number)
 
 
 @main.command(name="district-wise")
@@ -91,13 +91,13 @@ def pincode_wise(pin_code, date, age_filter, notify_on, vaccine_type):
               multiple=True,
               default=[],
               help="Dose number for which appointments are to be checked")
-def district_wise(district_id, date, age_filter, notify_on, vaccine_type):
+def district_wise(district_id, date, age_filter, notify_on, vaccine_type, dose_number):
     """
     get district wise available slots on a specific date in a given district.
     """
     print("Checking for available slots in district " + str(district_id) + ", for date " + str(
         date) + ",for min_age: " + str(age_filter))
-    check_district_wise_slots(district_id, date, age_filter, notify_on, vaccine_type)
+    check_district_wise_slots(district_id, date, age_filter, notify_on, vaccine_type, dose_number)
 
 
 @main.command(name="get-state-id")
@@ -189,7 +189,7 @@ def get_district_id(state_id, district_name):
               multiple=True,
               default=[],
               help="Dose number for which appointments are to be checked")
-def continuously_for_district(district_id, date, age_filter, interval, notify_on, vaccine_type):
+def continuously_for_district(district_id, date, age_filter, interval, notify_on, vaccine_type, dose_number):
     """
     Continuously check for available slots in district for a specific date after every x interval seconds
     and notify on whatsapp/telegram
@@ -197,7 +197,7 @@ def continuously_for_district(district_id, date, age_filter, interval, notify_on
     print("Checking for available slots in district " + str(district_id) + ", for date " + str(
         date) + ",for min_age: " + str(age_filter))
     while True:
-        check_district_wise_slots(district_id, date, age_filter, notify_on, vaccine_type)
+        check_district_wise_slots(district_id, date, age_filter, notify_on, vaccine_type, dose_number)
         time.sleep(interval)
 
 
@@ -234,7 +234,7 @@ def continuously_for_district(district_id, date, age_filter, interval, notify_on
               multiple=True,
               default=[],
               help="Dose number for which appointments are to be checked")
-def continuously_for_district_next7days(district_id, date, age_filter, interval, notify_on, vaccine_type):
+def continuously_for_district_next7days(district_id, date, age_filter, interval, notify_on, vaccine_type, dose_number):
     """
     Continuously check for available slots in district for next 7 days after every x interval seconds
     and notify on whatsapp/telegram
@@ -242,7 +242,7 @@ def continuously_for_district_next7days(district_id, date, age_filter, interval,
     print("Checking for available slots in district " + str(district_id) + ", for next 7 days starting from date:  "
           + str(date) + ",for min_age: " + str(age_filter))
     while True:
-        check_district_wise_slots_next7days(district_id, date, age_filter, notify_on, vaccine_type)
+        check_district_wise_slots_next7days(district_id, date, age_filter, notify_on, vaccine_type, dose_number)
         time.sleep(interval)
 
 
@@ -279,7 +279,7 @@ def continuously_for_district_next7days(district_id, date, age_filter, interval,
               multiple=True,
               default=[],
               help="Dose number for which appointments are to be checked")
-def continuously_for_pincode(pin_code, date, age_filter, interval, notify_on, vaccine_type):
+def continuously_for_pincode(pin_code, date, age_filter, interval, notify_on, vaccine_type, dose_number):
     """
     Continuously check for available slots in pin code for a specific date after every x interval seconds
     and notify on whatsapp/telegram
@@ -287,7 +287,7 @@ def continuously_for_pincode(pin_code, date, age_filter, interval, notify_on, va
     print("Checking for available slots in pin code " + str(pin_code) + ", for date " + str(date) +
           ",for min_age: " + str(age_filter))
     while True:
-        check_pincode_wise_slots(pin_code, date, age_filter, notify_on, vaccine_type)
+        check_pincode_wise_slots(pin_code, date, age_filter, notify_on, vaccine_type, dose_number)
         time.sleep(interval)
 
 
@@ -324,7 +324,7 @@ def continuously_for_pincode(pin_code, date, age_filter, interval, notify_on, va
               multiple=True,
               default=[],
               help="Dose number for which appointments are to be checked")
-def continuously_for_pincode_next7days(pin_code, date, age_filter, interval, notify_on, vaccine_type):
+def continuously_for_pincode_next7days(pin_code, date, age_filter, interval, notify_on, vaccine_type, dose_number):
     """
     Continuously check for available slots in pin code for next 7 days after every x interval seconds
     and notify on whatsapp/telegram
@@ -332,7 +332,7 @@ def continuously_for_pincode_next7days(pin_code, date, age_filter, interval, not
     print("Checking for available slots in pin code " + str(pin_code) + ", for next 7 days starting from date " + str(
         date) + ",for min_age: " + str(age_filter))
     while True:
-        check_pincode_wise_slots_next7days(pin_code, date, age_filter, notify_on, vaccine_type)
+        check_pincode_wise_slots_next7days(pin_code, date, age_filter, notify_on, vaccine_type, dose_number)
         time.sleep(interval)
 
 
@@ -365,13 +365,13 @@ def continuously_for_pincode_next7days(pin_code, date, age_filter, interval, not
               multiple=True,
               default=[],
               help="Dose number for which appointments are to be checked")
-def pincode_wise_next7days(pin_code, date, age_filter, notify_on, vaccine_type):
+def pincode_wise_next7days(pin_code, date, age_filter, notify_on, vaccine_type, dose_number):
     """
     Check for available slots in pin code for next 7 days from the date provided
     """
     print("Checking for available slots in pin code " + str(pin_code) + ", for next 7 days starting from date "
           + str(date) + ",for min_age: " + str(age_filter))
-    check_pincode_wise_slots_next7days(pin_code, date, age_filter, notify_on, vaccine_type)
+    check_pincode_wise_slots_next7days(pin_code, date, age_filter, notify_on, vaccine_type, dose_number)
 
 
 @main.command(name="district-wise-next7days")
@@ -403,13 +403,13 @@ def pincode_wise_next7days(pin_code, date, age_filter, notify_on, vaccine_type):
               multiple=True,
               default=[],
               help="Dose number for which appointments are to be checked")
-def district_wise_next7days(district_id, date, age_filter, notify_on, vaccine_type):
+def district_wise_next7days(district_id, date, age_filter, notify_on, vaccine_type, dose_number):
     """
     Check for available slots in district for next 7 days from the date provided
     """
     print("Checking for available slots in district " + str(district_id) + ", for next 7 days starting from date "
           + str(date) + ",for min_age: " + str(age_filter))
-    check_district_wise_slots_next7days(district_id, date, age_filter, notify_on, vaccine_type)
+    check_district_wise_slots_next7days(district_id, date, age_filter, notify_on, vaccine_type, dose_number)
 
 
 def check_pincode_wise_slots(pin_code, date, age_filter, notify_on, vaccine_types, dose_number):
@@ -549,4 +549,4 @@ def print_error_message(http_error):
 
 
 if __name__ == '__main__':
-    main()
+    check_pincode_wise_slots_next7days('485446', '22-05-2021', 45, 'telegram', 'covishield', 1)
