@@ -1,5 +1,5 @@
-requests
-click
-twilio
-cacheout
-urllib3
+requests==2.25.1
+click==8.0.1
+twilio==6.59.0
+cacheout==0.13.1
+urllib3==1.26.4
