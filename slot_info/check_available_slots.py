@@ -496,9 +496,9 @@ def check_district_wise_slots_next7days(district_id, date, age_filter, notify_on
 def is_slot_available(session, dose_number):
     is_available = False
     if session['available_capacity'] > 0:
-        if dose_number == 1 and session['available_capacity_dose1'] > 0:
-            is_available = True
-        if dose_number == 2 and session['available_capacity_dose2'] > 0:
+        if not dose_number or \
+                ("1" in dose_number and session['available_capacity_dose1'] > 0) or \
+                ("2" in dose_number and session['available_capacity_dose2'] > 0):
             is_available = True
     return is_available
 
@@ -516,7 +516,11 @@ def create_message_from_session(sessions, age_filter, notify_on, vaccine_types, 
                 message = message + "Name : " + str(session['name']) + "\n"
                 message = message + "Pincode: " + str(session['pincode']) + "\n"
                 message = message + "Vaccine Type: " + str(session['vaccine']) + "\n"
-                message = message + "Available Capacity: " + str(session['available_capacity']) + "\n"
+                message = message + "Total Available Capacity: " + str(session['available_capacity']) + "\n"
+                if "1" in dose_number and session['available_capacity_dose1'] > 0:
+                    message = message + "Available Capacity Dose1: " + str(session['available_capacity_dose1']) + "\n"
+                if "2" in dose_number and session['available_capacity_dose2'] > 0:
+                    message = message + "Available Capacity Dose2: " + str(session['available_capacity_dose2']) + "\n"
                 message = message + "Min Age: " + str(session['min_age_limit']) + "\n"
                 message = message + "Date: " + str(session['date']) + "\n"
                 send_message(message, notify_on)
@@ -549,4 +553,4 @@ def print_error_message(http_error):
 
 
 if __name__ == '__main__':
-    check_pincode_wise_slots_next7days('485446', '22-05-2021', 45, 'telegram', 'covishield', 1)
+    main()
