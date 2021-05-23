@@ -9,10 +9,10 @@ from slot_info.session_requests import SessionRequest
 from slot_info.telegram import send_telegram_message
 from slot_info.whatsapp import send_whatsapp_message
 from cacheout import Cache
-from slot_info.constants import vaccine_types
+from slot_info.constants import vaccine_types, dose_numbers
 
 # cache ttl is of 1 minute, this is to avoid sending multiple notifications
-cache = Cache(ttl=60)
+cache = Cache(ttl=600)
 session_requests = SessionRequest()
 
 
@@ -46,14 +46,20 @@ def main():
               required=False,
               multiple=True,
               default=[],
-              help="Vaccine_type for which appointments are to be checked")
-def pincode_wise(pin_code, date, age_filter, notify_on, vaccine_type):
+              help="Vaccine type for which appointments are to be checked")
+@click.option("-dn", "--dose_number",
+              type=click.Choice(dose_numbers),
+              required=False,
+              multiple=True,
+              default=[],
+              help="Dose number for which appointments are to be checked")
+def pincode_wise(pin_code, date, age_filter, notify_on, vaccine_type, dose_number):
     """
     get pin code wise available slots on a specific date in a given pin.
     """
     print("Checking for available slots in pin code " + str(pin_code) + ", for date " + str(date) +
           ",for min_age: " + str(age_filter))
-    check_pincode_wise_slots(pin_code, date, age_filter, notify_on, vaccine_type)
+    check_pincode_wise_slots(pin_code, date, age_filter, notify_on, vaccine_type, dose_number)
 
 
 @main.command(name="district-wise")
@@ -78,14 +84,20 @@ def pincode_wise(pin_code, date, age_filter, notify_on, vaccine_type):
               required=False,
               multiple=True,
               default=[],
-              help="Vaccine_type for which appointments are to be checked")
-def district_wise(district_id, date, age_filter, notify_on, vaccine_type):
+              help="Vaccine type for which appointments are to be checked")
+@click.option("-dn", "--dose_number",
+              type=click.Choice(dose_numbers),
+              required=False,
+              multiple=True,
+              default=[],
+              help="Dose number for which appointments are to be checked")
+def district_wise(district_id, date, age_filter, notify_on, vaccine_type, dose_number):
     """
     get district wise available slots on a specific date in a given district.
     """
     print("Checking for available slots in district " + str(district_id) + ", for date " + str(
         date) + ",for min_age: " + str(age_filter))
-    check_district_wise_slots(district_id, date, age_filter, notify_on, vaccine_type)
+    check_district_wise_slots(district_id, date, age_filter, notify_on, vaccine_type, dose_number)
 
 
 @main.command(name="get-state-id")
@@ -170,8 +182,14 @@ def get_district_id(state_id, district_name):
               required=False,
               multiple=True,
               default=[],
-              help="Vaccine_type for which appointments are to be checked")
-def continuously_for_district(district_id, date, age_filter, interval, notify_on, vaccine_type):
+              help="Vaccine type for which appointments are to be checked")
+@click.option("-dn", "--dose_number",
+              type=click.Choice(dose_numbers),
+              required=False,
+              multiple=True,
+              default=[],
+              help="Dose number for which appointments are to be checked")
+def continuously_for_district(district_id, date, age_filter, interval, notify_on, vaccine_type, dose_number):
     """
     Continuously check for available slots in district for a specific date after every x interval seconds
     and notify on whatsapp/telegram
@@ -179,7 +197,7 @@ def continuously_for_district(district_id, date, age_filter, interval, notify_on
     print("Checking for available slots in district " + str(district_id) + ", for date " + str(
         date) + ",for min_age: " + str(age_filter))
     while True:
-        check_district_wise_slots(district_id, date, age_filter, notify_on, vaccine_type)
+        check_district_wise_slots(district_id, date, age_filter, notify_on, vaccine_type, dose_number)
         time.sleep(interval)
 
 
@@ -209,8 +227,14 @@ def continuously_for_district(district_id, date, age_filter, interval, notify_on
               required=False,
               multiple=True,
               default=[],
-              help="Vaccine_type for which appointments are to be checked")
-def continuously_for_district_next7days(district_id, date, age_filter, interval, notify_on, vaccine_type):
+              help="Vaccine type for which appointments are to be checked")
+@click.option("-dn", "--dose_number",
+              type=click.Choice(dose_numbers),
+              required=False,
+              multiple=True,
+              default=[],
+              help="Dose number for which appointments are to be checked")
+def continuously_for_district_next7days(district_id, date, age_filter, interval, notify_on, vaccine_type, dose_number):
     """
     Continuously check for available slots in district for next 7 days after every x interval seconds
     and notify on whatsapp/telegram
@@ -218,7 +242,7 @@ def continuously_for_district_next7days(district_id, date, age_filter, interval,
     print("Checking for available slots in district " + str(district_id) + ", for next 7 days starting from date:  "
           + str(date) + ",for min_age: " + str(age_filter))
     while True:
-        check_district_wise_slots_next7days(district_id, date, age_filter, notify_on, vaccine_type)
+        check_district_wise_slots_next7days(district_id, date, age_filter, notify_on, vaccine_type, dose_number)
         time.sleep(interval)
 
 
@@ -248,8 +272,14 @@ def continuously_for_district_next7days(district_id, date, age_filter, interval,
               required=False,
               multiple=True,
               default=[],
-              help="Vaccine_type for which appointments are to be checked")
-def continuously_for_pincode(pin_code, date, age_filter, interval, notify_on, vaccine_type):
+              help="Vaccine type for which appointments are to be checked")
+@click.option("-dn", "--dose_number",
+              type=click.Choice(dose_numbers),
+              required=False,
+              multiple=True,
+              default=[],
+              help="Dose number for which appointments are to be checked")
+def continuously_for_pincode(pin_code, date, age_filter, interval, notify_on, vaccine_type, dose_number):
     """
     Continuously check for available slots in pin code for a specific date after every x interval seconds
     and notify on whatsapp/telegram
@@ -257,7 +287,7 @@ def continuously_for_pincode(pin_code, date, age_filter, interval, notify_on, va
     print("Checking for available slots in pin code " + str(pin_code) + ", for date " + str(date) +
           ",for min_age: " + str(age_filter))
     while True:
-        check_pincode_wise_slots(pin_code, date, age_filter, notify_on, vaccine_type)
+        check_pincode_wise_slots(pin_code, date, age_filter, notify_on, vaccine_type, dose_number)
         time.sleep(interval)
 
 
@@ -288,7 +318,13 @@ def continuously_for_pincode(pin_code, date, age_filter, interval, notify_on, va
               multiple=True,
               default=[],
               help="Vaccine_type for which appointments are to be checked")
-def continuously_for_pincode_next7days(pin_code, date, age_filter, interval, notify_on, vaccine_type):
+@click.option("-dn", "--dose_number",
+              type=click.Choice(dose_numbers),
+              required=False,
+              multiple=True,
+              default=[],
+              help="Dose number for which appointments are to be checked")
+def continuously_for_pincode_next7days(pin_code, date, age_filter, interval, notify_on, vaccine_type, dose_number):
     """
     Continuously check for available slots in pin code for next 7 days after every x interval seconds
     and notify on whatsapp/telegram
@@ -296,7 +332,7 @@ def continuously_for_pincode_next7days(pin_code, date, age_filter, interval, not
     print("Checking for available slots in pin code " + str(pin_code) + ", for next 7 days starting from date " + str(
         date) + ",for min_age: " + str(age_filter))
     while True:
-        check_pincode_wise_slots_next7days(pin_code, date, age_filter, notify_on, vaccine_type)
+        check_pincode_wise_slots_next7days(pin_code, date, age_filter, notify_on, vaccine_type, dose_number)
         time.sleep(interval)
 
 
@@ -322,14 +358,20 @@ def continuously_for_pincode_next7days(pin_code, date, age_filter, interval, not
               required=False,
               multiple=True,
               default=[],
-              help="Vaccine_type for which appointments are to be checked")
-def pincode_wise_next7days(pin_code, date, age_filter, notify_on, vaccine_type):
+              help="Vaccine type for which appointments are to be checked")
+@click.option("-dn", "--dose_number",
+              type=click.Choice(dose_numbers),
+              required=False,
+              multiple=True,
+              default=[],
+              help="Dose number for which appointments are to be checked")
+def pincode_wise_next7days(pin_code, date, age_filter, notify_on, vaccine_type, dose_number):
     """
     Check for available slots in pin code for next 7 days from the date provided
     """
     print("Checking for available slots in pin code " + str(pin_code) + ", for next 7 days starting from date "
           + str(date) + ",for min_age: " + str(age_filter))
-    check_pincode_wise_slots_next7days(pin_code, date, age_filter, notify_on, vaccine_type)
+    check_pincode_wise_slots_next7days(pin_code, date, age_filter, notify_on, vaccine_type, dose_number)
 
 
 @main.command(name="district-wise-next7days")
@@ -354,17 +396,23 @@ def pincode_wise_next7days(pin_code, date, age_filter, notify_on, vaccine_type):
               required=False,
               multiple=True,
               default=[],
-              help="Vaccine_type for which appointments are to be checked")
-def district_wise_next7days(district_id, date, age_filter, notify_on, vaccine_type):
+              help="Vaccine type for which appointments are to be checked")
+@click.option("-dn", "--dose_number",
+              type=click.Choice(dose_numbers),
+              required=False,
+              multiple=True,
+              default=[],
+              help="Dose number for which appointments are to be checked")
+def district_wise_next7days(district_id, date, age_filter, notify_on, vaccine_type, dose_number):
     """
     Check for available slots in district for next 7 days from the date provided
     """
     print("Checking for available slots in district " + str(district_id) + ", for next 7 days starting from date "
           + str(date) + ",for min_age: " + str(age_filter))
-    check_district_wise_slots_next7days(district_id, date, age_filter, notify_on, vaccine_type)
+    check_district_wise_slots_next7days(district_id, date, age_filter, notify_on, vaccine_type, dose_number)
 
 
-def check_pincode_wise_slots(pin_code, date, age_filter, notify_on, vaccine_types):
+def check_pincode_wise_slots(pin_code, date, age_filter, notify_on, vaccine_types, dose_number):
     validate_inputs(date, age_filter)
     url = BASE_API + find_by_pin
     params = {
@@ -374,14 +422,14 @@ def check_pincode_wise_slots(pin_code, date, age_filter, notify_on, vaccine_type
     try:
         response_data = session_requests.get(url=url, params=params)
         if len(response_data['sessions']) > 0:
-            create_message_from_session(response_data['sessions'], age_filter, notify_on, vaccine_types)
+            create_message_from_session(response_data['sessions'], age_filter, notify_on, vaccine_types, dose_number)
         else:
             print("No slots are available for pincode: ", pin_code)
     except requests.HTTPError as http_error:
         print_error_message(http_error)
 
 
-def check_pincode_wise_slots_next7days(pin_code, date, age_filter, notify_on, vaccine_types):
+def check_pincode_wise_slots_next7days(pin_code, date, age_filter, notify_on, vaccine_types, dose_number):
     validate_inputs(date, age_filter)
     url = BASE_API + calendar_by_pin
 
@@ -397,14 +445,14 @@ def check_pincode_wise_slots_next7days(pin_code, date, age_filter, notify_on, va
                     session['pincode'] = center['pincode']
                     session['name'] = center['name']
                     sessions = [session]
-                    create_message_from_session(sessions, age_filter, notify_on, vaccine_types)
+                    create_message_from_session(sessions, age_filter, notify_on, vaccine_types, dose_number)
         else:
             print("There are no centers available for this pin code")
     except requests.HTTPError as http_error:
         print_error_message(http_error)
 
 
-def check_district_wise_slots(district_id, date, age_filter, notify_on, vaccine_types):
+def check_district_wise_slots(district_id, date, age_filter, notify_on, vaccine_types, dose_number):
     validate_inputs(date, age_filter)
     url = BASE_API + find_by_district
     params = {
@@ -415,14 +463,14 @@ def check_district_wise_slots(district_id, date, age_filter, notify_on, vaccine_
     try:
         response_data = session_requests.get(url=url, params=params)
         if len(response_data['sessions']) > 0:
-            create_message_from_session(response_data['sessions'], age_filter, notify_on, vaccine_types)
+            create_message_from_session(response_data['sessions'], age_filter, notify_on, vaccine_types, dose_number)
         else:
             print("No slots are available for district: ", district_id)
     except requests.HTTPError as http_error:
         print_error_message(http_error)
 
 
-def check_district_wise_slots_next7days(district_id, date, age_filter, notify_on, vaccine_types):
+def check_district_wise_slots_next7days(district_id, date, age_filter, notify_on, vaccine_types, dose_number):
     validate_inputs(date, age_filter)
     url = BASE_API + calendar_by_district
     params = {
@@ -438,17 +486,29 @@ def check_district_wise_slots_next7days(district_id, date, age_filter, notify_on
                     session['pincode'] = center['pincode']
                     session['name'] = center['name']
                     sessions = [session]
-                    create_message_from_session(sessions, age_filter, notify_on, vaccine_types)
+                    create_message_from_session(sessions, age_filter, notify_on, vaccine_types, dose_number)
         else:
             print("There are no centers available for this district")
     except requests.HTTPError as http_error:
         print_error_message(http_error)
 
 
-def create_message_from_session(sessions, age_filter, notify_on, vaccine_types):
+def is_slot_available(session, dose_number):
+    is_available = False
+    if session['available_capacity'] > 0:
+        if not dose_number or \
+                ("1" in dose_number and session['available_capacity_dose1'] > 0) or \
+                ("2" in dose_number and session['available_capacity_dose2'] > 0):
+            is_available = True
+    return is_available
+
+
+def create_message_from_session(sessions, age_filter, notify_on, vaccine_types, dose_number):
     message = "Following Centers are available \n\n"
     for session in sessions:
-        if session['available_capacity'] > 0 and session['min_age_limit'] == age_filter and (not vaccine_types or session['vaccine'].lower() in vaccine_types):
+        if is_slot_available(session, dose_number) and \
+                session['min_age_limit'] == age_filter and \
+                (not vaccine_types or session['vaccine'].lower() in vaccine_types):
             print("Name: " + str(session['name']) + ", PinCode: " + str(session['pincode']) + ", Available: " + str(
                 session['available_capacity']) + ", Date :" + str(session['date']))
             if cache.get(str(session['pincode']) + session['name'] + str(session['date'])) is None:
@@ -456,7 +516,11 @@ def create_message_from_session(sessions, age_filter, notify_on, vaccine_types):
                 message = message + "Name : " + str(session['name']) + "\n"
                 message = message + "Pincode: " + str(session['pincode']) + "\n"
                 message = message + "Vaccine Type: " + str(session['vaccine']) + "\n"
-                message = message + "Available Capacity: " + str(session['available_capacity']) + "\n"
+                message = message + "Total Available Capacity: " + str(session['available_capacity']) + "\n"
+                if "1" in dose_number and session['available_capacity_dose1'] > 0:
+                    message = message + "Available Capacity Dose1: " + str(session['available_capacity_dose1']) + "\n"
+                if "2" in dose_number and session['available_capacity_dose2'] > 0:
+                    message = message + "Available Capacity Dose2: " + str(session['available_capacity_dose2']) + "\n"
                 message = message + "Min Age: " + str(session['min_age_limit']) + "\n"
                 message = message + "Date: " + str(session['date']) + "\n"
                 send_message(message, notify_on)
