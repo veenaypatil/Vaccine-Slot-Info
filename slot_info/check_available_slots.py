@@ -12,7 +12,7 @@ from cacheout import Cache
 from slot_info.constants import vaccine_types, dose_numbers
 
 # cache ttl is of 1 minute, this is to avoid sending multiple notifications
-cache = Cache(ttl=60)
+cache = Cache(ttl=600)
 session_requests = SessionRequest()
 
 
