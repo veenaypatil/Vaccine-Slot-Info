@@ -83,28 +83,28 @@ slotinfo get-state-id --state_name Maharashtra
 slotinfo get-district-id --state_id 21 --district_name Pune
 
 3. Check available appointment slots district wise
-slotinfo district-wise --district_id 334 --date 10-05-2021 --age_filter 18 --notify_on whatsapp --vaccine_type covishield --vaccine_type covaxin
+slotinfo district-wise --district_id 334 --date 10-05-2021 --age_filter 18 --notify_on whatsapp --vaccine_type covishield --vaccine_type covaxin --dose_number 1
 
 4. Check available appointment slots district wise for next 7 days
-slotinfo district-wise-next7days --district_id 334 --date 10-05-2021 --age_filter 18 --notify_on whatsapp --vaccine_type covishield --vaccine_type covaxin
+slotinfo district-wise-next7days --district_id 334 --date 10-05-2021 --age_filter 18 --notify_on whatsapp --vaccine_type covishield --vaccine_type covaxin --dose_number 2
 
 5. Check available appointment slots pincode wise
-slotinfo pincode-wise-next7days -pin 411015 --date 10-05-2021 --age_filter 45 --notify_on telegram --vaccine_type covishield --vaccine_type covaxin
+slotinfo pincode-wise-next7days -pin 411015 --date 10-05-2021 --age_filter 45 --notify_on telegram --vaccine_type covishield --vaccine_type covaxin --dose_number 1
 
 6. Check available appointment slots pincode wise
-slotinfo pincode-wise -pin 411015 --date 10-05-2021 --age_filter 45 --notify_on telegram --vaccine_type covishield --vaccine_type covaxin
+slotinfo pincode-wise -pin 411015 --date 10-05-2021 --age_filter 45 --notify_on telegram --vaccine_type covishield --vaccine_type covaxin --dose_number 1
 
 7. Run the cmd continously to check for available appointments in a district after evey x(seconds) interval
-slotinfo continuously-for-district --district_id 363 --date 10-05-2021 --age_filter 18 --interval 2 --notify_on telegram --vaccine_type covishield --vaccine_type covaxin
+slotinfo continuously-for-district --district_id 363 --date 10-05-2021 --age_filter 18 --interval 2 --notify_on telegram --vaccine_type covishield --vaccine_type covaxin --dose_number 1
 
 8. Run the cmd continously to check for available appointments in a district for next 7 days after evey x(seconds) interval
-slotinfo continuously-for-district-next7days --district_id 363 --date 10-05-2021 --age_filter 18 --interval 2 --notify_on telegram --vaccine_type covishield --vaccine_type covaxin
+slotinfo continuously-for-district-next7days --district_id 363 --date 10-05-2021 --age_filter 18 --interval 2 --notify_on telegram --vaccine_type covishield --vaccine_type covaxin --dose_number 2
 
 9. Run the cmd continously to check for available appointments in pin code after evey x(seconds) interval
-slotinfo continuously-for-pincode --pin_code 41105 --date 10-05-2021 --age_filter 18 --interval 2 --notify_on whatsapp --vaccine_type covishield --vaccine_type covaxin
+slotinfo continuously-for-pincode --pin_code 41105 --date 10-05-2021 --age_filter 18 --interval 2 --notify_on whatsapp --vaccine_type covishield --vaccine_type covaxin --dose_number 1
 
 10. Run the cmd continously to check for available appointments in pin code for next 7 days after evey x(seconds) interval
-slotinfo continuously-for-pincode-next7days --pin_code 41105 --date 10-05-2021 --age_filter 18 --interval 2 --notify_on whatsapp --vaccine_type covishield --vaccine_type covaxin
+slotinfo continuously-for-pincode-next7days --pin_code 411015 --date 10-05-2021 --age_filter 18 --interval 2 --notify_on whatsapp --vaccine_type covishield --vaccine_type covaxin --dose_number 2
 ```
 
 To get the help of any command use `--help` option with command name
