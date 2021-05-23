@@ -46,7 +46,7 @@ the sandbox
 
 ### Installation steps to use `slotinfo` command
 
-1. Download release directly by clicking on slotinfo-1.0.tar.gz here - https://github.com/veenaypatil/Vaccine-Slot-Info/releases/tag/v1.1
+1. Download release directly by clicking on slotinfo-1.2.tar.gz here - https://github.com/veenaypatil/Vaccine-Slot-Info/releases/tag/v1.2
 ```
 sudo pip install <downloaded_folder>/slotinfo-1.0.tar.gz
 or 
