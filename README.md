@@ -22,7 +22,7 @@ CLI to check for Covid Vaccine appointments pincode or district wise and get not
     "entities":[{"offset":0,"length":6,"type":"bot_command"}]}}]}
     ```
    `TELEGRAM_BOT_CHAT_ID` will be `130XXXXXX` from the above response
-6. Export the following env variables on your shell
+6. Export the following env variables on your terminal
 ```
 export TELEGRAM_BOT_TOKEN=<from step 3 above>
 export TELEGRAM_BOT_CHAT_ID=<from step 5 above>
@@ -31,7 +31,7 @@ export TELEGRAM_BOT_CHAT_ID=<from step 5 above>
 ### Twilio Configuration for Whatsapp Notification
 1. Create a new Twilio Trail Account - www.twilio.com/referral/PfBNJy 
 2. Follow the steps here https://www.twilio.com/console/sms/whatsapp/sandbox
-3. Export the following env variables on your shell
+3. Export the following env variables on your terminal
 ```
 export TWILIO_ACCOUNT_SID="twilio_account_sid" // you will get this here https://www.twilio.com/console
 export TWILIO_AUTH_TOKEN="twilio_auth_token" // you will get this here https://www.twilio.com/console
@@ -48,16 +48,16 @@ the sandbox
 
 1. Download release directly by clicking on slotinfo-1.2.tar.gz here - https://github.com/veenaypatil/Vaccine-Slot-Info/releases/tag/v1.2
 ```
-sudo pip install <downloaded_folder>/slotinfo-1.0.tar.gz
+sudo pip install <downloaded_folder>/slotinfo-1.2.tar.gz
 or 
-sudo pip3 install <downloaded_folder>/slotinfo-1.0.tar.gz
+sudo pip3 install <downloaded_folder>/slotinfo-1.2.tar.gz
 ```
 Checkout how to install pip here - https://www.techgeekbuzz.com/how-to-install-python-pip-on-windows-mac-and-linux/
 
 2. Or Clone the code and install
 ```
 python setup.py sdist
-sudo pip install dist/slotinfo-1.0.tar.gz
+sudo pip install dist/slotinfo-1.2.tar.gz
 ```
 
 ### CLI commands provided by this utility
