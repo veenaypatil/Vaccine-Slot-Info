@@ -533,9 +533,9 @@ def create_message_from_session(sessions, age_filter, notify_on, vaccine_types, 
                 message = message + "Pincode: " + str(session['pincode']) + "\n"
                 message = message + "Vaccine Type: " + str(session['vaccine']) + "\n"
                 message = message + "Total Available Capacity: " + str(session['available_capacity']) + "\n"
-                if "1" in dose_number and session['available_capacity_dose1'] > 0:
+                if "1" in dose_number or session['available_capacity_dose1'] > 0:
                     message = message + "Available Capacity Dose1: " + str(session['available_capacity_dose1']) + "\n"
-                if "2" in dose_number and session['available_capacity_dose2'] > 0:
+                if "2" in dose_number or session['available_capacity_dose2'] > 0:
                     message = message + "Available Capacity Dose2: " + str(session['available_capacity_dose2']) + "\n"
                 message = message + "Min Age: " + str(session['min_age_limit']) + "\n"
                 message = message + "Date: " + str(session['date']) + "\n"
