@@ -3,7 +3,7 @@ CLI to check for Covid Vaccine appointments pincode or district wise and get not
 
 ### Pre-requisites
 1. Python 3.6+ , you can install it from  https://www.python.org/downloads/
-2. Either Telegram Account
+2. Either Telegram Account (Recommended)
 3. Or Twilio Free Trail Account for whatsapp notification 
 
 
@@ -27,6 +27,20 @@ CLI to check for Covid Vaccine appointments pincode or district wise and get not
 export TELEGRAM_BOT_TOKEN=<from step 3 above>
 export TELEGRAM_BOT_CHAT_ID=<from step 5 above>
 ```
+Note: This method will send notification to your bot which will only be visible to you
+
+### Sending message to Channel using Telegram to notify your friends or relatives
+1. Create a new channel on Telegram and make custom bot created above as admin
+2. Got to https://web.telegram.org/#/im and select the channel created
+3. In the web url you will see something like https://web.telegram.org/#/im?p=c115xxxx_1234567890
+4. Copy the number before `_` like `c115xxxx` and remove the starting character `c`
+5. Prefix `-100` to this number as `-100115xxxx`
+6. Export the following variable
+```
+export TELEGRAM_BOT_TOKEN=<from step 3 of Telegram Bot Configuration>
+export TELEGRAM_BOT_CHAT_ID=-100115xxxx
+```
+Note: Using this method you will notify all the members of your channel
 
 ### Twilio Configuration for Whatsapp Notification
 1. Create a new Twilio Trail Account - www.twilio.com/referral/PfBNJy 
@@ -107,27 +121,30 @@ slotinfo continuously-for-pincode --pin_code 41105 --date 10-05-2021 --age_filte
 slotinfo continuously-for-pincode-next7days --pin_code 411015 --date 10-05-2021 --age_filter 18 --interval 2 --notify_on whatsapp --vaccine_type covishield --vaccine_type covaxin --dose_number 2
 ```
 
+Note: `--vaccine_type`, `dose_number` and `age_filter` are optinal fields
+
 To get the help of any command use `--help` option with command name
 ```
-slotinfo continuously-for-district --help
-Usage: slotinfo continuously-for-district [OPTIONS]
+Usage: slotinfo continuously-for-district-next7days [OPTIONS]
+
+  Continuously check for available slots in district for next 7 days after
+  every x interval seconds and notify on whatsapp/telegram
 
 Options:
   -dId, --district_id TEXT        Provide district Id to check for
                                   appointments  [required]
-
   -d, --date TEXT                 Date for which appointments are to be
-                                  checked  [required]
-
-  -af, --age_filter INTEGER       Filter only 18 plus or 45 plus appointments
+                                  checked for next 7 days  [required]
+  -af, --age_filter [18|45]       Filter only 18 plus or 45 plus appointments
   -i, --interval INTEGER          Interval in seconds  [required]
   -n, --notify_on [whatsapp|telegram]
                                   Receive notification on whatsapp/telegram
                                   [required]
   -vt, --vaccine_type [covishield|covaxin]
-                                  Filter appointments only by specific vaccine_type(s) 
-                                  [not required]
-
+                                  Vaccine type for which appointments are to
+                                  be checked
+  -dn, --dose_number [1|2]        Dose number for which appointments are to be
+                                  checked
   --help                          Show this message and exit.
 ```
 
