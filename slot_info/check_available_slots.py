@@ -11,8 +11,8 @@ from slot_info.whatsapp import send_whatsapp_message
 from cacheout import Cache
 from slot_info.constants import vaccine_types, dose_numbers, age_filter
 
-# cache ttl is of 1 minute, this is to avoid sending multiple notifications
-cache = Cache(ttl=600)
+# cache ttl is of 1 hr, this is to avoid sending multiple notifications
+cache = Cache(ttl=3600)
 session_requests = SessionRequest()
 
 
