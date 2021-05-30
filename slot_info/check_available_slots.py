@@ -9,7 +9,7 @@ from slot_info.session_requests import SessionRequest
 from slot_info.telegram import send_telegram_message
 from slot_info.whatsapp import send_whatsapp_message
 from cacheout import Cache
-from slot_info.constants import vaccine_types, dose_numbers
+from slot_info.constants import vaccine_types, dose_numbers, age_filter
 
 # cache ttl is of 1 minute, this is to avoid sending multiple notifications
 cache = Cache(ttl=600)
@@ -34,8 +34,10 @@ def main():
               required=True,
               help="Date for which appointments are to be checked")
 @click.option("-af", "--age_filter",
-              type=int,
-              default=18,
+              type=click.Choice(age_filter),
+              multiple=True,
+              required=False,
+              default=[],
               help="Filter only 18 plus or 45 plus appointments")
 @click.option("-n", "--notify_on",
               type=click.Choice(['whatsapp', 'telegram']),
@@ -72,8 +74,10 @@ def pincode_wise(pin_code, date, age_filter, notify_on, vaccine_type, dose_numbe
               required=True,
               help="Date for which appointments are to be checked")
 @click.option("-af", "--age_filter",
-              type=int,
-              default=18,
+              type=click.Choice(age_filter),
+              multiple=True,
+              required=False,
+              default=[],
               help="Filter only 18 plus or 45 plus appointments")
 @click.option("-n", "--notify_on",
               type=click.Choice(['whatsapp', 'telegram']),
@@ -166,8 +170,10 @@ def get_district_id(state_id, district_name):
               required=True,
               help="Date for which appointments are to be checked")
 @click.option("-af", "--age_filter",
-              type=int,
-              default=18,
+              type=click.Choice(age_filter),
+              multiple=True,
+              required=False,
+              default=[],
               help="Filter only 18 plus or 45 plus appointments")
 @click.option("-i", "--interval",
               type=int,
@@ -211,8 +217,10 @@ def continuously_for_district(district_id, date, age_filter, interval, notify_on
               required=True,
               help="Date for which appointments are to be checked for next 7 days")
 @click.option("-af", "--age_filter",
-              type=int,
-              default=18,
+              type=click.Choice(age_filter),
+              multiple=True,
+              required=False,
+              default=[],
               help="Filter only 18 plus or 45 plus appointments")
 @click.option("-i", "--interval",
               type=int,
@@ -256,8 +264,10 @@ def continuously_for_district_next7days(district_id, date, age_filter, interval,
               required=True,
               help="Date for which appointments are to be checked")
 @click.option("-af", "--age_filter",
-              type=int,
-              default=18,
+              type=click.Choice(age_filter),
+              multiple=True,
+              required=False,
+              default=[],
               help="Filter only 18 plus or 45 plus appointments")
 @click.option("-i", "--interval",
               type=int,
@@ -301,8 +311,10 @@ def continuously_for_pincode(pin_code, date, age_filter, interval, notify_on, va
               required=True,
               help="Date for which appointments are to be checked for next 7 days")
 @click.option("-af", "--age_filter",
-              type=int,
-              default=18,
+              type=click.Choice(age_filter),
+              multiple=True,
+              required=False,
+              default=[],
               help="Filter only 18 plus or 45 plus appointments")
 @click.option("-i", "--interval",
               type=int,
@@ -346,8 +358,10 @@ def continuously_for_pincode_next7days(pin_code, date, age_filter, interval, not
               required=True,
               help="Date for which appointments are to be checked for next 7 days")
 @click.option("-af", "--age_filter",
-              type=int,
-              default=18,
+              type=click.Choice(age_filter),
+              multiple=True,
+              required=False,
+              default=[],
               help="Filter only 18 plus or 45 plus appointments")
 @click.option("-n", "--notify_on",
               type=click.Choice(['whatsapp', 'telegram']),
@@ -384,8 +398,10 @@ def pincode_wise_next7days(pin_code, date, age_filter, notify_on, vaccine_type, 
               required=True,
               help="Date for which appointments are to be checked for next 7 days")
 @click.option("-af", "--age_filter",
-              type=int,
-              default=18,
+              type=click.Choice(age_filter),
+              multiple=True,
+              required=False,
+              default=[],
               help="Filter only 18 plus or 45 plus appointments")
 @click.option("-n", "--notify_on",
               type=click.Choice(['whatsapp', 'telegram']),
@@ -413,7 +429,7 @@ def district_wise_next7days(district_id, date, age_filter, notify_on, vaccine_ty
 
 
 def check_pincode_wise_slots(pin_code, date, age_filter, notify_on, vaccine_types, dose_number):
-    validate_inputs(date, age_filter)
+    validate_inputs(date)
     url = BASE_API + find_by_pin
     params = {
         "pincode": pin_code,
@@ -430,7 +446,7 @@ def check_pincode_wise_slots(pin_code, date, age_filter, notify_on, vaccine_type
 
 
 def check_pincode_wise_slots_next7days(pin_code, date, age_filter, notify_on, vaccine_types, dose_number):
-    validate_inputs(date, age_filter)
+    validate_inputs(date)
     url = BASE_API + calendar_by_pin
 
     params = {
@@ -453,7 +469,7 @@ def check_pincode_wise_slots_next7days(pin_code, date, age_filter, notify_on, va
 
 
 def check_district_wise_slots(district_id, date, age_filter, notify_on, vaccine_types, dose_number):
-    validate_inputs(date, age_filter)
+    validate_inputs(date)
     url = BASE_API + find_by_district
     params = {
         "district_id": district_id,
@@ -471,7 +487,7 @@ def check_district_wise_slots(district_id, date, age_filter, notify_on, vaccine_
 
 
 def check_district_wise_slots_next7days(district_id, date, age_filter, notify_on, vaccine_types, dose_number):
-    validate_inputs(date, age_filter)
+    validate_inputs(date)
     url = BASE_API + calendar_by_district
     params = {
         "district_id": district_id,
@@ -507,7 +523,7 @@ def create_message_from_session(sessions, age_filter, notify_on, vaccine_types, 
     message = "Following Centers are available \n\n"
     for session in sessions:
         if is_slot_available(session, dose_number) and \
-                session['min_age_limit'] == age_filter and \
+                (not age_filter or str(session['min_age_limit']) in age_filter) and \
                 (not vaccine_types or session['vaccine'].lower() in vaccine_types):
             print("Name: " + str(session['name']) + ", PinCode: " + str(session['pincode']) + ", Available: " + str(
                 session['available_capacity']) + ", Date :" + str(session['date']))
@@ -535,9 +551,7 @@ def send_message(message, notify_on):
         send_telegram_message(message)
 
 
-def validate_inputs(date, age_filter):
-    if age_filter != 18 and age_filter != 45:
-        raise ValueError("Possible values for age_filter is 18 or 45")
+def validate_inputs(date):
     try:
         datetime.strptime(date, "%d-%m-%Y")
     except ValueError:
