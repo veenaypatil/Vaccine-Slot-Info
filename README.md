@@ -60,18 +60,18 @@ the sandbox
 
 ### Installation steps to use `slotinfo` command
 
-1. Download release directly by clicking on slotinfo-1.2.tar.gz here - https://github.com/veenaypatil/Vaccine-Slot-Info/releases/tag/v1.2
+1. Download release directly by clicking on slotinfo-1.3.tar.gz here - https://github.com/veenaypatil/Vaccine-Slot-Info/releases/tag/v1.3
 ```
-sudo pip install <downloaded_folder>/slotinfo-1.2.tar.gz
+sudo pip install <downloaded_folder>/slotinfo-1.3.tar.gz
 or 
-sudo pip3 install <downloaded_folder>/slotinfo-1.2.tar.gz
+sudo pip3 install <downloaded_folder>/slotinfo-1.3.tar.gz
 ```
 Checkout how to install pip here - https://www.techgeekbuzz.com/how-to-install-python-pip-on-windows-mac-and-linux/
 
 2. Or Clone the code and install
 ```
 python setup.py sdist
-sudo pip install dist/slotinfo-1.2.tar.gz
+sudo pip install dist/slotinfo-1.3.tar.gz
 ```
 
 ### CLI commands provided by this utility

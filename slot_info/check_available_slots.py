@@ -520,7 +520,7 @@ def is_slot_available(session, dose_number):
 
 
 def create_message_from_session(sessions, age_filter, notify_on, vaccine_types, dose_number):
-    message = "Following Centers are available \n\n"
+    message = ""
     for session in sessions:
         if is_slot_available(session, dose_number) and \
                 (not age_filter or str(session['min_age_limit']) in age_filter) and \
